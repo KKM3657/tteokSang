@@ -17,6 +17,7 @@ import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.service.UserService;
+import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
