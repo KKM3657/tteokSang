@@ -2,7 +2,6 @@ package com.welcome;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -19,11 +18,6 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import com.welcome.Message;
-import java.util.StringTokenizer;
-import org.apache.hadoop.util.ProgramDriver;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 
 @Slf4j
 public class Main {
@@ -150,14 +144,6 @@ public class Main {
 
 		public void reduce(Text key, Iterable<Text> values, Context context)
 			throws IOException, InterruptedException {
-			Properties configs = new Properties();
-			String topic = "tteoksang_hadoop";
-			configs.put("bootstrap.servers", "tteoksang.me:9093"); // kafka host 및 server 설정
-			configs.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-			configs.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-
-			// producer 생성
-			KafkaProducer<String, String> producer = new KafkaProducer<String, String>(configs);
 
 			// 새로운 반기 객체 생성
 			ReduceStatistics reduceStatistics = new ReduceStatistics();
@@ -290,7 +276,6 @@ public class Main {
 			// ReduceStatistics 객체를 Json 형태의 문자열로 반환하여 출력
 			ObjectMapper mapper = new ObjectMapper();
 			String outputValue = mapper.writeValueAsString(reduceStatistics);
-			producer.send(new ProducerRecord<String, String>(topic ,key.toString(), outputValue));
 			context.write(key, new Text(outputValue));
 
 		}
@@ -300,16 +285,14 @@ public class Main {
 	public static void main(String[] args) {
 		// Main 함수 시작
 		Configuration conf = new Configuration();
-		conf.set("mapreduce.job.classpath.files", "/home/hdfs/jars/kafka-clients.jar");
-		conf.set("mapreduce.job.classpath.files", "/home/hdfs/jars/kafka_2.13-3.6.2.jar");
 
 		try(FileSystem fs = FileSystem.get(conf)) {
 			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 
-//			if (otherArgs.length != 2) {
-//				System.err.println("Usage: <in> <out>");
-//				System.exit(2);
-//			}
+			if (otherArgs.length != 2) {
+				System.err.println("Usage: <in> <out>");
+				System.exit(2);
+			}
 
 			Job job = Job.getInstance(conf, "main");
 			job.setJarByClass(Main.class);
