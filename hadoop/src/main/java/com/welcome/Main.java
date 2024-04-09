@@ -306,10 +306,10 @@ public class Main {
 		try(FileSystem fs = FileSystem.get(conf)) {
 			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 
-			if (otherArgs.length != 2) {
-				System.err.println("Usage: <in> <out>");
-				System.exit(2);
-			}
+//			if (otherArgs.length != 2) {
+//				System.err.println("Usage: <in> <out>");
+//				System.exit(2);
+//			}
 
 			Job job = Job.getInstance(conf, "main");
 			job.setJarByClass(Main.class);

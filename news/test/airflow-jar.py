@@ -24,7 +24,7 @@ bash_command = f'hdfs dfs -mkdir -p hdfs://localhost:9000/user/hdfs/{season_id}'
 bash_command_put_data = f'hdfs dfs -put -f /home/hdfs/logs/{season_id}/{half_season_id} hdfs://localhost:9000/user/hdfs/{season_id}'
 
 # jar 파일 실행을 위한 경로 지정 및 input/output 폴더 지정
-bash_command_jar = f'hadoop jar /home/hdfs/jars/hadoop.jar com.welcome.Main -libjars /home/hdfs/jars/kafka-clients.jar hdfs://localhost:9000/user/hdfs/{season_id}/{half_season_id} hdfs://0.0.0.0:9000/user/{out_path}'
+bash_command_jar = f'hadoop jar /home/hdfs/jars/hadoop.jar com.welcome.Main hdfs://localhost:9000/user/hdfs/{season_id}/{half_season_id} hdfs://0.0.0.0:9000/user/{out_path} -libjars /home/hdfs/jars/kafka-clients.jar'
 
 # 디렉토리 만드는 task
 create_directory_task = BashOperator(
